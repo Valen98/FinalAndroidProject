@@ -44,27 +44,32 @@ class MainActivity : ComponentActivity() {
                     val uContext = LocalContext.current
                     val login = Intent(uContext, LoginPage::class.java)
                     val user = auth.currentUser
-                    Column (modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally) {
-                        //TODO: Should not be able to get into this activity when you are not signed in.
-                        if(user == null) {
-                            uContext.startActivity(login)
-                        }
-                        Button(onClick = {
-                            viewModel.onAction(UserAction.Logout)
-                            uContext.startActivity(login)
-                        }, modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 16.dp, top = 16.dp)
+                    if(user == null) {
+                        uContext.startActivity(login)
+                    }else {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(text = "Logout")
+                            //TODO: Should not be able to get into this activity when you are not signed in.
+
+                            Button(
+                                onClick = {
+                                    viewModel.onAction(UserAction.Logout)
+                                    uContext.startActivity(login)
+                                }, modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(end = 16.dp, top = 16.dp)
+                            ) {
+                                Text(text = "Logout")
+                            }
+
+                            //TODO: Fill this with more post, story and recommended follower and so on.
+                            Text(text = "Welcome")
+
+                            //TODO: Need to make a profile page with the correct data from the database.
                         }
-
-                        //TODO: Fill this with more post, story and recommended follower and so on.
-                        Text(text = "Welcome")
-
-                        //TODO: Need to make a profile page with the correct data from the database.
                     }
                 }
             }

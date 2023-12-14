@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -36,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -112,7 +114,11 @@ fun SignInForm(context: Context, viewModel: AccountViewModel) {
             UserData.email = email
             UserData.password = password
             viewModel.onAction(UserAction.LoginUser)
-            context.startActivity(login)
+            if(UserData.isSignedIn) {
+                context.startActivity(login)
+            }else {
+                Toast.makeText(context, "Wrong Email or Password", Toast.LENGTH_LONG).show()
+            }
             Log.d("Login", "This is login with email: $email")
          }, modifier = Modifier
             .fillMaxWidth()
