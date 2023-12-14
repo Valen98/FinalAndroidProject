@@ -80,7 +80,6 @@ fun SignInForm(context: Context, viewModel: AccountViewModel) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val login = Intent(context, MainActivity::class.java)
 
-
     Column(modifier = Modifier.size(width = 300.dp, height = 750.dp)) {
         OutlinedTextField(
             value = email,
@@ -109,7 +108,6 @@ fun SignInForm(context: Context, viewModel: AccountViewModel) {
             }
         )
 
-        //TODO: Should not go into main activity if login failed
         Button(onClick = {
             UserData.email = email
             UserData.password = password
