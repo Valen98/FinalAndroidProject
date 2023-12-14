@@ -36,7 +36,7 @@ class AccountViewModel() : ViewModel() {
         }
 
     }
-
+//This is mike branch
     private fun uploadNewUser(db: FirebaseFirestore) {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val userCreated = LocalDateTime.now().format(formatter)
