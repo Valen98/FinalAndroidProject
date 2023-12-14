@@ -2,10 +2,6 @@ package com.example.finalproject
 
 import java.io.File
 
-data class UserData(
-    val userId: String?,
-    val username: String?,
-    ) {}
 
 class UserDataCompanion() {
     companion object {

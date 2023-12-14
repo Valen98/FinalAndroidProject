@@ -42,13 +42,7 @@ import com.example.finalproject.ui.theme.FinalProjectTheme
 import com.google.android.gms.auth.api.identity.Identity
 
 class SignUpScreen : ComponentActivity() {
-
-    private val googleAuthUiClient by lazy {
-        GoogleAuthUiClient(
-            context = applicationContext,
-            oneTapClient = Identity.getSignInClient(applicationContext)
-        )
-    }
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
