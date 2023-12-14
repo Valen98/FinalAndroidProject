@@ -109,10 +109,10 @@ fun SignInForm(context: Context, viewModel: AccountViewModel) {
         )
 
         Button(onClick = {
-            UserData.email = email
-            UserData.password = password
+            UserDataCompanion.email = email
+            UserDataCompanion.password = password
             viewModel.onAction(UserAction.LoginUser)
-            if(UserData.isSignedIn) {
+            if(UserDataCompanion.isSignedIn) {
                 context.startActivity(login)
             }else {
                 Toast.makeText(context, "Wrong Email or Password", Toast.LENGTH_LONG).show()

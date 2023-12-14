@@ -39,8 +39,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.finalproject.ui.theme.FinalProjectTheme
+import com.google.android.gms.auth.api.identity.Identity
 
 class SignUpScreen : ComponentActivity() {
+
+    private val googleAuthUiClient by lazy {
+        GoogleAuthUiClient(
+            context = applicationContext,
+            oneTapClient = Identity.getSignInClient(applicationContext)
+        )
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -80,8 +88,8 @@ class SignUpScreen : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Username() {
-    var fullName by remember { mutableStateOf(UserData.username) }
-    var email by remember { mutableStateOf(UserData.email) }
+    var fullName by remember { mutableStateOf(UserDataCompanion.username) }
+    var email by remember { mutableStateOf(UserDataCompanion.email) }
     val uContext = LocalContext.current
     val createPassword = Intent(uContext, PasswordScreen::class.java)
     var isEnabled by remember { mutableStateOf(false) }
@@ -114,8 +122,8 @@ fun Username() {
         isEnabled = fullName != "" && email != ""
         Button(onClick = {
             uContext.startActivity(createPassword)
-            UserData.username = fullName
-            UserData.email = email
+            UserDataCompanion.username = fullName
+            UserDataCompanion.email = email
         }, enabled = isEnabled,
             modifier = Modifier
             .fillMaxWidth()

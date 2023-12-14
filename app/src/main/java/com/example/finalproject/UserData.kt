@@ -2,8 +2,14 @@ package com.example.finalproject
 
 import java.io.File
 
-class UserData() {
+data class UserData(
+    val userId: String?,
+    val username: String?,
+    ) {}
+
+class UserDataCompanion() {
     companion object {
+        var userId: String = ""
         var username: String = ""
         var password: String = ""
         var email: String = ""

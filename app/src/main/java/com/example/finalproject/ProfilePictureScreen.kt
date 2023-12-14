@@ -218,7 +218,7 @@ fun imageCaptureFromCamera(db: FirebaseFirestore, viewModel: AccountViewModel) {
                     viewModel.onAction(UserAction.UploadNewUser)
                     viewModel.onAction(UserAction.CreateAccount)
                     Toast.makeText(context, "Account created", Toast.LENGTH_LONG).show()
-                    UserData.image = file
+                    UserDataCompanion.image = file
                     context.startActivity(accountCreated)
                 },modifier = Modifier
                     .fillMaxWidth()

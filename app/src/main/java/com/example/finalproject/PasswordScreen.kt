@@ -129,7 +129,7 @@ fun CreatePassword() {
         isEnabled = password.length >= 6
         Button(onClick = {
             pContext.startActivity(profilePicture)
-            UserData.password = password
+            UserDataCompanion.password = password
          }, enabled = isEnabled,
             modifier = Modifier
             .fillMaxWidth()

@@ -45,16 +45,16 @@ class AccountViewModel() : ViewModel() {
         val userCreated = LocalDateTime.now().format(formatter)
         Log.d("User Created", "User Created")
         val user = mapOf(
-            "username" to UserData.username,
-            "password" to UserData.password,
-            "email" to UserData.email,
+            "username" to UserDataCompanion.username,
+            "password" to UserDataCompanion.password,
+            "email" to UserDataCompanion.email,
             "UserCreated" to userCreated
         )
 
-        db.collection("User").document(UserData.username)
+        db.collection("User").document(UserDataCompanion.username)
             .set(user)
             .addOnSuccessListener { documentReference ->
-            Log.d("BIGTAG", "DocumentSnapshot added with ID: ${UserData.username}")
+            Log.d("BIGTAG", "DocumentSnapshot added with ID: ${UserDataCompanion.username}")
         }
             .addOnFailureListener { e ->
                 Log.d("BIGTAG", "Error adding Document: $e")
@@ -108,7 +108,7 @@ class AccountViewModel() : ViewModel() {
     }
 
     private fun registerUser()  {
-        auth.createUserWithEmailAndPassword(UserData.email, UserData.password)
+        auth.createUserWithEmailAndPassword(UserDataCompanion.email, UserDataCompanion.password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Registration successful
@@ -121,24 +121,24 @@ class AccountViewModel() : ViewModel() {
     }
 
     private fun loginUser() {
-        auth.signInWithEmailAndPassword(UserData.email, UserData.password)
+        auth.signInWithEmailAndPassword(UserDataCompanion.email, UserDataCompanion.password)
             .addOnCompleteListener { task ->
                 if(task.isSuccessful) {
-                    UserData.isSignedIn = true
+                    UserDataCompanion.isSignedIn = true
                     val user = auth.currentUser
                 }else {
-                    UserData.email = ""
-                    UserData.password = ""
-                    UserData.isSignedIn = false
+                    UserDataCompanion.email = ""
+                    UserDataCompanion.password = ""
+                    UserDataCompanion.isSignedIn = false
                     Log.w("Login", "signInWithEmail:failure", task.exception)
                 }
             }
     }
 
     private fun logoutUser() {
-        UserData.username = ""
-        UserData.email = ""
-        UserData.password = ""
+        UserDataCompanion.username = ""
+        UserDataCompanion.email = ""
+        UserDataCompanion.password = ""
         auth.signOut()
     }
 }

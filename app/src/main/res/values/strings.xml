@@ -6,4 +6,5 @@
     <string name="profile_picture_desc">Profile Picture</string>
     <string name="title_activity_take_picture">TakePicture</string>
     <string name="title_activity_login_page">LoginPage</string>
+    <string name="default_web_client_id"><![CDATA["    <string name=\"default_web_client_id\">603321158126-bvmcq9q1njq2kcadald5vhtl2imppdah.apps.googleusercontent.com</string>\n"]]></string>
 </resources>
