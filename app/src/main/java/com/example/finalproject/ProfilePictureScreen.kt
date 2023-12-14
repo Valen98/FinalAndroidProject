@@ -140,13 +140,13 @@ fun AddPicture(db: FirebaseFirestore, viewModel: AccountViewModel) {
             .padding(top = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center) {
-            imageCaptureFromCamera(db, viewModel)
+            ImageCaptureFromCamera(db, viewModel)
         }
     }
 }
 
 @Composable
-fun imageCaptureFromCamera(db: FirebaseFirestore, viewModel: AccountViewModel) {
+fun ImageCaptureFromCamera(db: FirebaseFirestore, viewModel: AccountViewModel) {
     val context = LocalContext.current
     val accountCreated = Intent(context, MainActivity::class.java)
 
@@ -211,6 +211,7 @@ fun imageCaptureFromCamera(db: FirebaseFirestore, viewModel: AccountViewModel) {
                     painter = rememberImagePainter(capturedImageUri),
                     contentDescription = null,
                 )
+
             }
             Row(modifier = Modifier.padding(top = 16.dp)) {
                 //TODO: Should save the image into storage as profile picture. Its probably in AccountViewModel
@@ -219,6 +220,7 @@ fun imageCaptureFromCamera(db: FirebaseFirestore, viewModel: AccountViewModel) {
                     viewModel.onAction(UserAction.CreateAccount)
                     Toast.makeText(context, "Account created", Toast.LENGTH_LONG).show()
                     UserDataCompanion.image = file
+                    uploadImageToStorage(capturedImageUri, context)
                     context.startActivity(accountCreated)
                 },modifier = Modifier
                     .fillMaxWidth()
@@ -282,5 +284,23 @@ fun PlaceHolderImage() {
                 .clip(CircleShape)
                 .border(8.dp, Color.LightGray, CircleShape)
         )
+    }
+}
+
+//upload the image, just send in the Uri of the image and change
+// the 'path/name' for the purpose of the image
+fun uploadImageToStorage(img: Uri, context: Context) {
+    img.let { uri ->
+        val storageRef = FirebaseStorage.getInstance().reference
+        val imageRef = storageRef.child("ProfilePictures/${UserDataCompanion.username}.jpg")
+        val uploadTask = imageRef.putFile(uri)
+
+        uploadTask.addOnSuccessListener {
+            // Image upload successful
+            Toast.makeText(context, "Image uploaded successfully!", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener { e ->
+            // Image upload failed
+            Toast.makeText(context, "Image upload failed: $e", Toast.LENGTH_SHORT).show()
+        }
     }
 }
