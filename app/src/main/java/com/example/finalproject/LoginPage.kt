@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -127,7 +128,10 @@ class LoginPage : ComponentActivity() {
                             Log.d("SignIn", " Sign in state is now:  ${state.isSignedInSuccessful}")
                             finish()
                         }
-                        CreateAccount(context)
+                        Column(modifier = Modifier.padding(top = 400.dp)) {
+                            CreateAccount(context)
+
+                        }
                     }
                 }
             }
@@ -143,7 +147,7 @@ fun SignInForm(context: Context, viewModel: AccountViewModel) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val login = Intent(context, MainActivity::class.java)
 
-    Column(modifier = Modifier.size(width = 300.dp, height = 500.dp)) {
+    Column(modifier = Modifier.width(width = 300.dp)) {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -228,11 +232,11 @@ fun SignInScreen(
     }
 
     Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp),
+        .padding(16.dp)
+        .width(300.dp),
         contentAlignment = Alignment.Center,
     ) {
-        Button(onClick = onSignInClick) {
+        Button(onClick = onSignInClick, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Login with Google")
 
         }
