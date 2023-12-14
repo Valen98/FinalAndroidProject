@@ -26,8 +26,19 @@ import com.google.firebase.ktx.Firebase
 
 //Things to do in "MainScreen":
 // 1. USER ACTIONS:
-//      - Add to story button -> takes you to media selection screen (media selection screen -> then to a share screen
+//      - Add to story button -> takes you to media selection screen (media selection screen (capture from device) -> then to a share screen to post to story
 //      - Messages button -> takes you to messages screen
+//2. SUGGESTED FOLLOWS:
+//      - Should be a side-scrollable list of contacts from the phone
+//3. FEED SECTION:
+//      - vertically scrollable list of posts from users that have been followed (or random users if no follows)
+//      - Like button should be pressable for users scrolling the feed
+//4. QUICK ACTION TOOLBAR:
+//      - Should have 3 buttons avaialble to all screens on the app
+//          - Home Button (takes you back to main page)
+//          - Create new post (similar to 'add a story' but for the feed)
+//          - Profile button (takes users to the their profile page.)
+//
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
