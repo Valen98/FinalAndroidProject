@@ -64,6 +64,9 @@ class AccountViewModel() : ViewModel() {
 
 
 
+        //stuff
+
+
         val docRef = db.collection("User")
         docRef.addSnapshotListener{snapshot,e ->
             if(e != null ){
