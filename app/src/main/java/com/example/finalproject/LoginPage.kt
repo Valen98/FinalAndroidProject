@@ -1,9 +1,12 @@
 package com.example.finalproject
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.example.finalproject.ui.theme.FinalProjectTheme
 
 class LoginPage : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -53,9 +57,12 @@ class LoginPage : ComponentActivity() {
                     Column (modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally) {
-
-                        SignInForm()
-                        CreateAccount()
+                        val context = LocalContext.current
+                        val viewModel: AccountViewModel by viewModels()
+                        val db = viewModel.connectToDB()
+                        viewModel.dbState.db = db
+                        SignInForm(context, viewModel)
+                        CreateAccount(context)
                     }
                 }
             }
@@ -65,17 +72,20 @@ class LoginPage : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInForm() {
-    var username by remember { mutableStateOf("") }
+fun SignInForm(context: Context, viewModel: AccountViewModel) {
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    val login = Intent(context, MainActivity::class.java)
+
 
     Column(modifier = Modifier.size(width = 300.dp, height = 750.dp)) {
         OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Username") },
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
         )
+
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -96,7 +106,15 @@ fun SignInForm() {
 
             }
         )
-        Button(onClick = { /*TODO*/ }, modifier = Modifier
+
+        //TODO: Should not go into main activity if login failed
+        Button(onClick = {
+            UserData.email = email
+            UserData.password = password
+            viewModel.onAction(UserAction.LoginUser)
+            context.startActivity(login)
+            Log.d("Login", "This is login with email: $email")
+         }, modifier = Modifier
             .fillMaxWidth()
             .padding(end = 16.dp, top = 16.dp)
         ) {
@@ -112,8 +130,7 @@ fun SignInForm() {
 }
 
 @Composable
-fun CreateAccount() {
-    val context = LocalContext.current
+fun CreateAccount(context: Context) {
     val createAccount = Intent(context, SignUpScreen::class.java)
     Column (modifier = Modifier.size(width = 300.dp, height = 50.dp)){
         OutlinedButton(onClick = { context.startActivity(createAccount) }, modifier = Modifier

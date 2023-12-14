@@ -81,6 +81,7 @@ fun CreatePassword() {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val pContext = LocalContext.current
     val profilePicture = Intent(pContext, ProfilePictureScreen::class.java)
+    var isEnabled by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -125,11 +126,12 @@ fun CreatePassword() {
                     .fillMaxWidth()
             )
         }
-
+        isEnabled = password.length >= 6
         Button(onClick = {
             pContext.startActivity(profilePicture)
             UserData.password = password
-         }, modifier = Modifier
+         }, enabled = isEnabled,
+            modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
         ) {

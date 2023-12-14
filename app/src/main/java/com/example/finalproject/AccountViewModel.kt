@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -15,6 +16,8 @@ import java.util.concurrent.CompletableFuture
 
 class AccountViewModel() : ViewModel() {
     var dbState by mutableStateOf(DatabaseState())
+    val auth: FirebaseAuth = FirebaseAuth.getInstance()
+
     fun connectToDB(): FirebaseFirestore {
         return Firebase.firestore
     }
@@ -25,10 +28,17 @@ class AccountViewModel() : ViewModel() {
             is UserAction.UploadNewUser -> {
                 dbState.db?.let { uploadNewUser(it) }
             }
+            is UserAction.CreateAccount -> {
+                dbState.db?.let { registerUser() }
+            }
             is UserAction.LoginUser -> {
-                dbState.db?.let { loginUser(it) }
+                dbState.db?.let { loginUser() }
+            }
+            is UserAction.Logout -> {
+                dbState.db?.let { logoutUser() }
             }
         }
+
     }
 
     private fun uploadNewUser(db: FirebaseFirestore) {
@@ -36,8 +46,9 @@ class AccountViewModel() : ViewModel() {
         val userCreated = LocalDateTime.now().format(formatter)
         Log.d("User Created", "User Created")
         val user = mapOf(
-            "Username" to UserData.username,
+            "username" to UserData.username,
             "password" to UserData.password,
+            "email" to UserData.email,
             "UserCreated" to userCreated
         )
 
@@ -49,7 +60,6 @@ class AccountViewModel() : ViewModel() {
             .addOnFailureListener { e ->
                 Log.d("BIGTAG", "Error adding Document: $e")
             }
-
 
 
         val docRef = db.collection("User")
@@ -71,9 +81,6 @@ class AccountViewModel() : ViewModel() {
             }
             */
         }
-    }
-    private fun loginUser(db: FirebaseFirestore) {
-
     }
 
     private suspend fun fetchAllUsers(db: FirebaseFirestore): Map<String, Map<String, Any>> {
@@ -98,5 +105,40 @@ class AccountViewModel() : ViewModel() {
             }
 
         return completableFuture.await()
+    }
+
+    private fun registerUser()  {
+        auth.createUserWithEmailAndPassword(UserData.email, UserData.password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Registration successful
+                    val user = auth.currentUser
+                } else {
+                    // Registration failed
+                    Log.w("Registration", "createUserWithEmail:failure", task.exception)
+                }
+            }
+    }
+
+    private fun loginUser() {
+        auth.signInWithEmailAndPassword(UserData.email, UserData.password)
+            .addOnCompleteListener { task ->
+                if(task.isSuccessful) {
+                    UserData.isSignedIn = true
+                    val user = auth.currentUser
+                }else {
+                    UserData.email = ""
+                    UserData.password = ""
+                    UserData.isSignedIn = false
+                    Log.w("Login", "signInWithEmail:failure", task.exception)
+                }
+            }
+    }
+
+    private fun logoutUser() {
+        UserData.username = ""
+        UserData.email = ""
+        UserData.password = ""
+        auth.signOut()
     }
 }

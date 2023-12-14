@@ -213,8 +213,10 @@ fun imageCaptureFromCamera(db: FirebaseFirestore, viewModel: AccountViewModel) {
                 )
             }
             Row(modifier = Modifier.padding(top = 16.dp)) {
+                //TODO: Should save the image into storage as profile picture. Its probably in AccountViewModel
                 Button(onClick = {
                     viewModel.onAction(UserAction.UploadNewUser)
+                    viewModel.onAction(UserAction.CreateAccount)
                     Toast.makeText(context, "Account created", Toast.LENGTH_LONG).show()
                     UserData.image = file
                     context.startActivity(accountCreated)

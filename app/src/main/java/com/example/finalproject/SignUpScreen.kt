@@ -80,9 +80,12 @@ class SignUpScreen : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Username() {
-    var fullName by remember { mutableStateOf("") }
+    var fullName by remember { mutableStateOf(UserData.username) }
+    var email by remember { mutableStateOf(UserData.email) }
     val uContext = LocalContext.current
     val createPassword = Intent(uContext, PasswordScreen::class.java)
+    var isEnabled by remember { mutableStateOf(false) }
+
     Column() {
         Row(modifier = Modifier.fillMaxWidth().padding(start = 16.dp)) {
             Text(text = "What's your name?", fontSize=24.sp, fontWeight = FontWeight.Bold)
@@ -97,16 +100,32 @@ fun Username() {
                     .fillMaxWidth()
             )
         }
+        Row() {
+            OutlinedTextField(
+                value = email,
+                onValueChange = {email = it},
+                label = { Text("Email") },
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    .fillMaxWidth()
+            )
+        }
+
+        isEnabled = fullName != "" && email != ""
         Button(onClick = {
             uContext.startActivity(createPassword)
             UserData.username = fullName
-         }, modifier = Modifier
+            UserData.email = email
+        }, enabled = isEnabled,
+            modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
         ) {
             Text(text = "Next")
 
         }
+
+
         OutlinedButton(onClick = { /*TODO*/ }, modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, top = 8.dp)
