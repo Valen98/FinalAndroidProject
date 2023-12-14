@@ -24,9 +24,6 @@ class AccountViewModel() : ViewModel() {
 
     fun onAction(action: UserAction) {
         when(action) {
-            is UserAction.UploadNewUser -> {
-                dbState.db?.let { uploadNewUser(it) }
-            }
             is UserAction.CreateAccount -> {
                 dbState.db?.let { registerUser() }
             }
@@ -112,7 +109,7 @@ class AccountViewModel() : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Registration successful
-                    val user = auth.currentUser
+                    dbState.db?.let { uploadNewUser(it) }
                 } else {
                     // Registration failed
                     Log.w("Registration", "createUserWithEmail:failure", task.exception)
