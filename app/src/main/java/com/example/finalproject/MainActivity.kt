@@ -24,6 +24,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
+//Things to do in "MainScreen":
+// 1. USER ACTIONS:
+//      - Add to story button -> takes you to media selection screen (media selection screen -> then to a share screen
+//      - Messages button -> takes you to messages screen
+
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
