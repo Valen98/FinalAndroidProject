@@ -1,5 +1,6 @@
 package com.example.finalproject
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,12 +13,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.finalproject.ui.theme.FinalProjectTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -34,7 +39,7 @@ import com.google.firebase.ktx.Firebase
 //      - vertically scrollable list of posts from users that have been followed (or random users if no follows)
 //      - Like button should be pressable for users scrolling the feed
 //4. QUICK ACTION TOOLBAR:
-//      - Should have 3 buttons avaialble to all screens on the app
+//      - Should have 3 buttons available to all screens on the app
 //          - Home Button (takes you back to main page)
 //          - Create new post (similar to 'add a story' but for the feed)
 //          - Profile button (takes users to the their profile page.)
@@ -94,4 +99,22 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun MainScreen (){
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column {
 
+        }
+
+    }
+}
+
+@Preview
+@Composable
+fun PrevMainScreen (){
+    MainScreen()
+}
