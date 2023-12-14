@@ -5,11 +5,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -40,7 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -53,10 +54,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import coil.compose.rememberImagePainter
 import com.example.finalproject.ui.theme.FinalProjectTheme
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Objects
+
 
 class ProfilePictureScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +73,12 @@ class ProfilePictureScreen : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    var storage: FirebaseStorage
+                    var storageReference: StorageReference
+                    val viewModel: AccountViewModel by viewModels()
+                    val db = viewModel.connectToDB()
+                    viewModel.dbState.db = db
+                    Log.d("ProfileScreen" , "This is db: $db")
                     Column {
 
                         Row(
@@ -84,10 +95,10 @@ class ProfilePictureScreen : ComponentActivity() {
                             }
                         }
                         Row(modifier = Modifier.height(680.dp)) {
-                            AddPicture()
+                            AddPicture(db, viewModel)
                         }
                         OutlinedButton(
-                            onClick = { /*TODO*/ }, modifier = Modifier
+                            onClick = { /* TODO */}, modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 16.dp, end = 16.dp, top = 8.dp)
                         ) {
@@ -103,8 +114,7 @@ class ProfilePictureScreen : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPicture() {
-
+fun AddPicture(db: FirebaseFirestore, viewModel: AccountViewModel) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -130,13 +140,13 @@ fun AddPicture() {
             .padding(top = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center) {
-            imageCaptureFromCamera()
+            imageCaptureFromCamera(db, viewModel)
         }
     }
 }
 
 @Composable
-fun imageCaptureFromCamera() {
+fun imageCaptureFromCamera(db: FirebaseFirestore, viewModel: AccountViewModel) {
     val context = LocalContext.current
     val accountCreated = Intent(context, MainActivity::class.java)
 
@@ -185,21 +195,28 @@ fun imageCaptureFromCamera() {
                         .size(200.dp)
                         .clip(CircleShape)
                         .border(8.dp, Color.LightGray, CircleShape)
-                        .clickable {val permissionCheckResult =
-                            ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA )
+                        .clickable {
+                            val permissionCheckResult =
+                                ContextCompat.checkSelfPermission(
+                                    context,
+                                    android.Manifest.permission.CAMERA
+                                )
                             if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
                                 cameraLauncher.launch(uri)
                             } else {
                                 // Request a permission
                                 permissionLauncher.launch(android.Manifest.permission.CAMERA)
-                            } },
+                            }
+                        },
                     painter = rememberImagePainter(capturedImageUri),
                     contentDescription = null,
                 )
             }
             Row(modifier = Modifier.padding(top = 16.dp)) {
                 Button(onClick = {
+                    viewModel.onAction(UserAction.UploadNewUser)
                     Toast.makeText(context, "Account created", Toast.LENGTH_LONG).show()
+                    UserData.image = file
                     context.startActivity(accountCreated)
                 },modifier = Modifier
                     .fillMaxWidth()
@@ -264,5 +281,4 @@ fun PlaceHolderImage() {
                 .border(8.dp, Color.LightGray, CircleShape)
         )
     }
-
 }

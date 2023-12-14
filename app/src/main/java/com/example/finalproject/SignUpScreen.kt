@@ -97,11 +97,15 @@ fun Username() {
                     .fillMaxWidth()
             )
         }
-        Button(onClick = { uContext.startActivity(createPassword)}, modifier = Modifier
+        Button(onClick = {
+            uContext.startActivity(createPassword)
+            UserData.username = fullName
+         }, modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
         ) {
             Text(text = "Next")
+
         }
         OutlinedButton(onClick = { /*TODO*/ }, modifier = Modifier
             .fillMaxWidth()

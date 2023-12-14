@@ -126,7 +126,10 @@ fun CreatePassword() {
             )
         }
 
-        Button(onClick = { pContext.startActivity(profilePicture) }, modifier = Modifier
+        Button(onClick = {
+            pContext.startActivity(profilePicture)
+            UserData.password = password
+         }, modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
         ) {
