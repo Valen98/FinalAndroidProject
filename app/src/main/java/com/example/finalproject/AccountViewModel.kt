@@ -22,8 +22,6 @@ class AccountViewModel() : ViewModel() {
         return Firebase.firestore
     }
 
-
-
     fun onAction(action: UserAction) {
         when(action) {
             is UserAction.UploadNewUser -> {
@@ -62,9 +60,6 @@ class AccountViewModel() : ViewModel() {
                 Log.d("BIGTAG", "Error adding Document: $e")
             }
 
-
-
-        //stuff
 
 
         val docRef = db.collection("User")
