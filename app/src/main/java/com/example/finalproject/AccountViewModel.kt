@@ -17,7 +17,6 @@ import java.util.concurrent.CompletableFuture
 class AccountViewModel() : ViewModel() {
     var dbState by mutableStateOf(DatabaseState())
     val auth: FirebaseAuth = FirebaseAuth.getInstance()
-
     fun connectToDB(): FirebaseFirestore {
         return Firebase.firestore
     }
@@ -36,7 +35,6 @@ class AccountViewModel() : ViewModel() {
         }
 
     }
-//This is mike branch
     private fun uploadNewUser(db: FirebaseFirestore) {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val userCreated = LocalDateTime.now().format(formatter)
@@ -131,11 +129,31 @@ class AccountViewModel() : ViewModel() {
                 }
             }
     }
-
     private fun logoutUser() {
         UserDataCompanion.username = ""
         UserDataCompanion.email = ""
         UserDataCompanion.password = ""
         auth.signOut()
+    }
+
+    fun checkUser(db: FirebaseFirestore) {
+        val docRef = db.collection("User")
+        val userMap: MutableList<String> = ArrayList()
+
+        docRef.get()
+            .addOnSuccessListener {document ->
+                for (doc in document) {
+                    doc.exists()
+                    Log.d("Doc", "This is doc Id ${doc.id}")
+                    userMap.add(0, doc.id)
+                }
+                //If doc is null (username not taken) then set userNotExist to true
+                Log.d("Array", userMap.toString())
+                UserDataCompanion.userNotExist = !userMap.contains(UserDataCompanion.username)
+                Log.d("Contains", "This contains: ${userMap.contains(UserDataCompanion.username)}")
+                Log.d("username", "username is: ${UserDataCompanion.username}")
+            }.addOnFailureListener {exception ->
+                Log.d("CheckUser", "get failed with ", exception)
+            }
     }
 }

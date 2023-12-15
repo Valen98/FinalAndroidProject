@@ -11,6 +11,7 @@ class UserDataCompanion() {
         var email: String = ""
         var image: File? = null
         var isSignedIn: Boolean = false
+        var userNotExist: Boolean = false
     }
 }
 

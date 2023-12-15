@@ -95,7 +95,7 @@ class ProfilePictureScreen : ComponentActivity() {
                             }
                         }
                         Row(modifier = Modifier.height(680.dp)) {
-                            AddPicture(db, viewModel)
+                            AddPicture(viewModel)
                         }
                         OutlinedButton(
                             onClick = { /* TODO */}, modifier = Modifier
@@ -114,7 +114,7 @@ class ProfilePictureScreen : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPicture(db: FirebaseFirestore, viewModel: AccountViewModel) {
+fun AddPicture(viewModel: AccountViewModel) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -140,13 +140,13 @@ fun AddPicture(db: FirebaseFirestore, viewModel: AccountViewModel) {
             .padding(top = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center) {
-            ImageCaptureFromCamera(db, viewModel)
+            ImageCaptureFromCamera( viewModel)
         }
     }
 }
 
 @Composable
-fun ImageCaptureFromCamera(db: FirebaseFirestore, viewModel: AccountViewModel) {
+fun ImageCaptureFromCamera(viewModel: AccountViewModel) {
     val context = LocalContext.current
     val accountCreated = Intent(context, MainActivity::class.java)
 
