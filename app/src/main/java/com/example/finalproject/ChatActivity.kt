@@ -14,13 +14,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -67,7 +72,21 @@ class ChatActivity : ComponentActivity() {
                         val contactId: Long = intent.getLongExtra("contactId", 0)
                         val id: Int = contactId.toInt() - 1
                         val contact: Contact = contactList[id]
-                        Header(contact)
+                        Row(modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.primary)
+                            .padding(bottom = 8.dp)) {
+                            Row() {
+                                IconButton(onClick = { finish() }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowBack,
+                                        "Back",
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                                Header(contact)
+                            }
+                        }
                         Column() {
                             MessageList(viewModel, db)
                             MyApp(viewModel, db, contactId.toInt(), phoneId)
@@ -81,32 +100,28 @@ class ChatActivity : ComponentActivity() {
 
 @Composable
 fun Header(contact: Contact) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .background(MaterialTheme.colorScheme.primary)
-        .padding(bottom = 8.dp)) {
-        Row(modifier = Modifier.padding(start = 16.dp))  {
+    Row() {
+        Text(
+            modifier = Modifier
+                .padding(16.dp)
+                .drawBehind {
+                    drawCircle(
+                        color = Color.Blue,
+                        radius = this.size.maxDimension,
+                    )
+                },
+            text = contact.name.first().toString(),
+            style = TextStyle(color = Color.White, fontSize = 20.sp)
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .drawBehind {
-                        drawCircle(
-                            color = Color.Blue,
-                            radius = this.size.maxDimension,
-                        )
-                    },
-                text = contact.name.first().toString(),
+                text = contact.name,
+                modifier = Modifier.padding(16.dp),
                 style = TextStyle(color = Color.White, fontSize = 20.sp)
             )
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically){
-                Text(
-                    text = contact.name,
-                    modifier = Modifier.padding(16.dp),
-                    style = TextStyle(color = Color.White, fontSize = 20.sp)
-                )
-            }
         }
     }
 }
@@ -125,7 +140,9 @@ fun MyApp(viewModel: ChatViewModel, db: FirebaseFirestore, chatId: Int, phoneId:
 
     chatState.chatName = "Chat$chatId"
     Column() {
-        Column(modifier = Modifier.fillMaxWidth().weight(1f)) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f)) {
 
         }
         Row(modifier = Modifier

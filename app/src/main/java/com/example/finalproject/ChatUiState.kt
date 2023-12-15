@@ -4,7 +4,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class ChatUiState(
     var db: FirebaseFirestore? = null,
-    var id: Int = 0,
     var chatName: String = "",
     var message: String = "",
     var phoneId: String = "",

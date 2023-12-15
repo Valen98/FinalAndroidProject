@@ -89,7 +89,7 @@ class LoginPage : ComponentActivity() {
                             onResult = {result ->
                                 if(result.resultCode == RESULT_OK) {
                                     lifecycleScope.launch {
-                                        val signInResult = googleAuthUiClient.SignInWithIntent(
+                                        val signInResult = googleAuthUiClient.signInWithIntent(
                                             intent = result.data ?: return@launch
                                         )
                                         signInModel.onSignInResult(signInResult)
