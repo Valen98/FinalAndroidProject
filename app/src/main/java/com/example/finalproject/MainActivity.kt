@@ -90,6 +90,7 @@ class MainActivity : ComponentActivity() {
                             Text(text = "Welcome")
 
                             //TODO: Need to make a profile page with the correct data from the database.
+                            Footer("main")
                         }
                     }
                 }
