@@ -7,4 +7,6 @@
     <string name="title_activity_take_picture">TakePicture</string>
     <string name="title_activity_login_page">LoginPage</string>
     <string name="default_web_client_id">330803928674-6bqdt3j6bn8l6l4q97ce6khmnlok73f9.apps.googleusercontent.com</string>
+    <string name="title_activity_contact_screen">ContactScreen</string>
+    <string name="title_activity_chat">ChatActivity</string>
 </resources>

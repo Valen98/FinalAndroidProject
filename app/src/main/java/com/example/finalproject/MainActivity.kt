@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                         ) {
                             //TODO: Should not be able to get into this activity when you are not signed in.
-                            Header()
+                            Header(uContext)
                             Column(modifier = Modifier.height(730.dp)) {
                                 Button(
                                     onClick = {
