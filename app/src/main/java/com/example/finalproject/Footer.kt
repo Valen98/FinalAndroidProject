@@ -43,7 +43,8 @@ fun Footer(activity: String) {
 
     Column(modifier = Modifier
         .fillMaxWidth()
-        .background(color = Color.White)
+        .background(color = Color.White),
+        verticalArrangement = Arrangement.Bottom,
     )
     {
         Row(
