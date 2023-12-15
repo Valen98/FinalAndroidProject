@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -70,21 +71,22 @@ class MainActivity : ComponentActivity() {
                     }else {
                         Column(
                             modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             //TODO: Should not be able to get into this activity when you are not signed in.
-
-                            Button(
-                                onClick = {
-                                    viewModel.onAction(UserAction.Logout)
-                                    uContext.startActivity(login)
-                                }, modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(end = 16.dp, top = 16.dp)
-                            ) {
-                                Text(text = "Logout")
+                            Header()
+                            Column(modifier = Modifier.height(730.dp)) {
+                                Button(
+                                    onClick = {
+                                        viewModel.onAction(UserAction.Logout)
+                                        uContext.startActivity(login)
+                                    }, modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(end = 16.dp, top = 16.dp)
+                                ) {
+                                    Text(text = "Logout")
+                                }
                             }
+
 
                             //TODO: Fill this with more post, story and recommended follower and so on.
                             Text(text = "Welcome")
