@@ -44,6 +44,7 @@ class GoogleAuthUiClient(
                         userId = uid,
                         username = displayName,
                     )
+
                 },
                 errorMessage = null
             )
