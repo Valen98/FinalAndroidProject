@@ -1,5 +1,7 @@
 package com.example.finalproject
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun Header() {
+fun Header(context: Context) {
+    val contact = Intent(context, ContactScreen::class.java)
     Column(
         modifier = Modifier.fillMaxWidth().height(50.dp),
         verticalArrangement = Arrangement.Top,
@@ -42,14 +45,14 @@ fun Header() {
                 IconButton(onClick = { /* TODO */ }) {
                     Icon(
                         imageVector = Icons.Outlined.HeartBroken,
-                        "Back",
+                        "Notification",
                         modifier = Modifier.size(20.dp)
                     )
                 }
-                IconButton(onClick = { /* TODO */ }) {
+                IconButton(onClick = { context.startActivity(contact) }) {
                     Icon(
                         imageVector = Icons.Outlined.Message,
-                        "Back",
+                        "Message",
                         modifier = Modifier.size(20.dp)
                     )
                 }
