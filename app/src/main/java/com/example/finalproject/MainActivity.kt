@@ -9,10 +9,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +50,9 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
+    companion object{
+        lateinit var contactList: ArrayList<Contact>
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -57,6 +62,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    contactList = arrayListOf()
                     //Db connection
                     val viewModel: AccountViewModel by viewModels()
                     val db = viewModel.connectToDB()
@@ -77,6 +83,7 @@ class MainActivity : ComponentActivity() {
                             //TODO: Should not be able to get into this activity when you are not signed in.
                             Header(uContext)
                             Column(modifier = Modifier.height(730.dp)) {
+                                SuggestFollowers(contentResolver)
                                 Button(
                                     onClick = {
                                         viewModel.onAction(UserAction.Logout)
@@ -89,7 +96,6 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
 
-
                             //TODO: Fill this with more post, story and recommended follower and so on.
                             Text(text = "Welcome")
 
@@ -97,6 +103,7 @@ class MainActivity : ComponentActivity() {
                             Footer("main")
                         }
                     }
+
                 }
             }
         }
@@ -125,3 +132,4 @@ fun MainScreen (){
 fun PrevMainScreen (){
     MainScreen()
 }
+

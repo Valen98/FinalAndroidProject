@@ -34,10 +34,9 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.finalproject.ContactScreen.Companion.contactList
+import com.example.finalproject.MainActivity.Companion.contactList
 import com.example.finalproject.ui.theme.FinalProjectTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -45,9 +44,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 
 class ContactScreen : ComponentActivity() {
-    companion object{
-        lateinit var contactList: ArrayList<Contact>
-    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -78,7 +75,7 @@ class ContactScreen : ComponentActivity() {
             }
 
         }
-        contactList = arrayListOf()
+
     }
 }
 
