@@ -41,6 +41,7 @@ fun Footer(activity: String) {
     val context = LocalContext.current
     val profile = Intent(context, ProfilePictureScreen::class.java)
     val newPost = Intent(context, NewPostScreen::class.java)
+    val home = Intent(context, MainActivity::class.java)
 
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -61,7 +62,7 @@ fun Footer(activity: String) {
                 profileIcon = Icons.Filled.AccountCircle
             }
 
-            IconButton(onClick = { /* TODO */ }) {
+            IconButton(onClick = { context.startActivity(home) }) {
                 Icon(
                     imageVector = homeIcon,
                     "Back",
