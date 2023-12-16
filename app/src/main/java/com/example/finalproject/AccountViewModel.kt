@@ -35,11 +35,12 @@ class AccountViewModel() : ViewModel() {
         }
 
     }
-    private fun uploadNewUser(db: FirebaseFirestore) {
+    private fun uploadNewUser(db: FirebaseFirestore, uId: String) {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val userCreated = LocalDateTime.now().format(formatter)
         Log.d("User Created", "User Created")
         val user = mapOf(
+            "userId" to uId,
             "username" to UserDataCompanion.username,
             "password" to UserDataCompanion.password,
             "email" to UserDataCompanion.email,
@@ -107,7 +108,8 @@ class AccountViewModel() : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Registration successful
-                    dbState.db?.let { uploadNewUser(it) }
+                    //If the user is successfull, add the uId to the account.
+                    dbState.db?.let { auth.currentUser?.let { authUser -> uploadNewUser(it, authUser.uid) } }
                 } else {
                     // Registration failed
                     Log.w("Registration", "createUserWithEmail:failure", task.exception)
