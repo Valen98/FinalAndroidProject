@@ -64,7 +64,7 @@ class ChatActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val contactList = ContactScreen.contactList
+                    val contactList = MainActivity.contactList
                     val viewModel: ChatViewModel by viewModels()
                     val db = viewModel.connectToDB()
                     val phoneId = Settings.Secure.ANDROID_ID
