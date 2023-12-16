@@ -94,9 +94,10 @@ class NewPostScreen : ComponentActivity() {
                                 )
                             }
                         }
-                        Row(modifier = Modifier.height(680.dp)) {
+                        Row(modifier = Modifier.height(750.dp)) {
                             AddPostPicture(viewModel)
                         }
+                        Footer("addPost")
                     }
                 }
             }
