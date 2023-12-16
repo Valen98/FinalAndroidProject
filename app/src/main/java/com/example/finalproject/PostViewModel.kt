@@ -1,9 +1,6 @@
 package com.example.finalproject
 
-import android.content.Context
-import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -35,17 +31,15 @@ class PostViewModel() : ViewModel() {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val postCreated = LocalDateTime.now().format(formatter)
         val post = mapOf(
-                 "userId" to UserDataCompanion.userId,
-                "username" to UserDataCompanion.username,
-                "email" to UserDataCompanion.email,
-                "title" to PostState.title,
-                "postCreated" to postCreated,
-                "postKey" to PostState.key,
-                "postPath" to PostState.path,
+            "userId" to UserDataCompanion.userId,
+            "title" to PostState.title,
+            "postCreated" to postCreated,
+            "postKey" to PostState.key,
+            "postPath" to PostState.path,
         )
 
         PostState.key?.let {
-            db.collection("Post").document(it)
+            db.collection("UserPost").document(UserDataCompanion.userId).collection("Post").document(PostState.key!!)
                 .set(post)
                 .addOnSuccessListener { documentReference ->
                     Log.d("BIGTAG", "DocumentSnapshot added with ID: ${UserDataCompanion.username}")
