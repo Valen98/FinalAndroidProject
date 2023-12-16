@@ -9,4 +9,5 @@
     <string name="default_web_client_id">330803928674-6bqdt3j6bn8l6l4q97ce6khmnlok73f9.apps.googleusercontent.com</string>
     <string name="title_activity_contact_screen">ContactScreen</string>
     <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_new_post_screen">NewPostScreen</string>
 </resources>

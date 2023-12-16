@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity() {
                         uContext.startActivity(login)
                     }else {
                         UserDataCompanion.username = user.displayName.toString()
+                        UserDataCompanion.userId = user.uid
                         Column(
                             modifier = Modifier.fillMaxSize(),
                         ) {
