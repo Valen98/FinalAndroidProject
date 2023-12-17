@@ -9,8 +9,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -50,6 +55,9 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
+    companion object{
+        lateinit var contactList: ArrayList<Contact>
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -62,6 +70,7 @@ class MainActivity : ComponentActivity() {
                     //Db connection
                     val viewModel: AccountViewModel by viewModels()
                     val db = viewModel.connectToDB()
+                    contactList = arrayListOf()
                     viewModel.dbState.db = db
 
                     auth = FirebaseAuth.getInstance()
@@ -71,6 +80,10 @@ class MainActivity : ComponentActivity() {
                     if(user == null) {
                         uContext.startActivity(login)
                     }else {
+
+                        UserDataCompanion.username = user.displayName.toString()
+                        UserDataCompanion.userId = user.uid
+
                         Column(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.Center,
@@ -78,16 +91,21 @@ class MainActivity : ComponentActivity() {
                         ) {
                             //TODO: Should not be able to get into this activity when you are not signed in.
 
-                            Button(
-                                onClick = {
-                                    viewModel.onAction(UserAction.Logout)
-                                    uContext.startActivity(login)
-                                }, modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(end = 16.dp, top = 16.dp)
-                            ) {
-                                Text(text = "Logout")
+                            Header(uContext)
+                            Column(modifier = Modifier.height(730.dp)) {
+                                SuggestFollowers(contentResolver)
+                                Button(
+                                    onClick = {
+                                        viewModel.onAction(UserAction.Logout)
+                                        uContext.startActivity(login)
+                                    }, modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(end = 16.dp, top = 16.dp)
+                                ) {
+                                    Text(text = "Logout")
+                                }
                             }
+                            Footer("main")
 
                             //TODO: Fill this with more post, story and recommended follower and so on.
                             Text(text = "Welcome")
