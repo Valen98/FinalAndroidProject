@@ -9,18 +9,18 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,9 +50,6 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
-    companion object{
-        lateinit var contactList: ArrayList<Contact>
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -62,7 +59,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    contactList = arrayListOf()
                     //Db connection
                     val viewModel: AccountViewModel by viewModels()
                     val db = viewModel.connectToDB()
@@ -75,35 +71,30 @@ class MainActivity : ComponentActivity() {
                     if(user == null) {
                         uContext.startActivity(login)
                     }else {
-                        UserDataCompanion.username = user.displayName.toString()
-                        UserDataCompanion.userId = user.uid
                         Column(
                             modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             //TODO: Should not be able to get into this activity when you are not signed in.
-                            Header(uContext)
-                            Column(modifier = Modifier.height(730.dp)) {
-                                SuggestFollowers(contentResolver)
-                                Button(
-                                    onClick = {
-                                        viewModel.onAction(UserAction.Logout)
-                                        uContext.startActivity(login)
-                                    }, modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(end = 16.dp, top = 16.dp)
-                                ) {
-                                    Text(text = "Logout")
-                                }
+
+                            Button(
+                                onClick = {
+                                    viewModel.onAction(UserAction.Logout)
+                                    uContext.startActivity(login)
+                                }, modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(end = 16.dp, top = 16.dp)
+                            ) {
+                                Text(text = "Logout")
                             }
 
                             //TODO: Fill this with more post, story and recommended follower and so on.
                             Text(text = "Welcome")
 
                             //TODO: Need to make a profile page with the correct data from the database.
-                            Footer("main")
                         }
                     }
-
                 }
             }
         }
@@ -116,7 +107,30 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen (){
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            BottomAppBar(
+            ) {
+                IconButton(
+                    onClick = { /*TODO*/ }
+                )
+                {
+                    
+                }
+                TextButton(
+                    onClick = { /*TODO*/ }
+                )
+                {
+
+                }
+                TextButton(
+                    onClick = { /*TODO*/ }
+                )
+                {
+
+                }
+            }
+        }
     ) {
         Column {
 
@@ -132,4 +146,3 @@ fun MainScreen (){
 fun PrevMainScreen (){
     MainScreen()
 }
-
