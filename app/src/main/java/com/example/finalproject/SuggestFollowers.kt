@@ -37,7 +37,8 @@ import com.google.accompanist.permissions.shouldShowRationale
 @Composable
 fun SuggestFollowers(contentResolver: ContentResolver) {
     Column (modifier = Modifier
-        .fillMaxWidth().height(200.dp)){
+        .fillMaxWidth().height(130.dp)
+    ){
         Text(text = "Suggested for you")
         ContactListRow(contentResolver)
 

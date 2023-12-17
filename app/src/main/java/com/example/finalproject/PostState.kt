@@ -1,9 +1,12 @@
 package com.example.finalproject
 
-class PostState() {
-    companion object {
-        var path = ""
-        var title = ""
-        var key: String? = ""
-    }
-}
+import android.net.Uri
+import com.google.firebase.firestore.FirebaseFirestore
+
+class PostState(
+    var db: FirebaseFirestore? = null,
+    var userId: String = "",
+    var userPostMap: Map<String, Map<String, Any>>? = null,
+    var userDataMap: Map<String, Map<String, Any>>? = null,
+    var postImg: Uri
+)

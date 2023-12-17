@@ -65,6 +65,7 @@ class MainActivity : ComponentActivity() {
                     contactList = arrayListOf()
                     //Db connection
                     val viewModel: AccountViewModel by viewModels()
+                    val postViewModel: PostViewModel by viewModels()
                     val db = viewModel.connectToDB()
                     viewModel.dbState.db = db
 
@@ -84,6 +85,7 @@ class MainActivity : ComponentActivity() {
                             Header(uContext)
                             Column(modifier = Modifier.height(730.dp)) {
                                 SuggestFollowers(contentResolver)
+
                                 Button(
                                     onClick = {
                                         viewModel.onAction(UserAction.Logout)
@@ -94,6 +96,7 @@ class MainActivity : ComponentActivity() {
                                 ) {
                                     Text(text = "Logout")
                                 }
+                                MainFrame(postViewModel, db)
                             }
 
                             //TODO: Fill this with more post, story and recommended follower and so on.
