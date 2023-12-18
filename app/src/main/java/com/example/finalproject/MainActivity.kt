@@ -93,6 +93,7 @@ class MainActivity : ComponentActivity() {
 
                             Header(uContext)
                             Column(modifier = Modifier.height(730.dp)) {
+                                AddToStory()
                                 SuggestFollowers(contentResolver)
                                 Button(
                                     onClick = {
@@ -124,35 +125,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen (){
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        bottomBar = {
-            BottomAppBar(
-            ) {
-                IconButton(
-                    onClick = { /*TODO*/ }
-                )
-                {
-                    
-                }
-                TextButton(
-                    onClick = { /*TODO*/ }
-                )
-                {
-
-                }
-                TextButton(
-                    onClick = { /*TODO*/ }
-                )
-                {
-
-                }
-            }
-        }
-    ) {
-        Column {
-
-        }
+    Column {
 
     }
 }
