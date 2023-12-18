@@ -62,7 +62,11 @@ fun Footer(activity: String) {
                 profileIcon = Icons.Filled.AccountCircle
             }
 
-            IconButton(onClick = { context.startActivity(home) }) {
+            IconButton(onClick = {
+                if(activity != "main") {
+                    context.startActivity(home)
+                }
+            }) {
                 Icon(
                     imageVector = homeIcon,
                     "Back",

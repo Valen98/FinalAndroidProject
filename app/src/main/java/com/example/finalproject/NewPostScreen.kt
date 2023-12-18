@@ -50,7 +50,6 @@ import androidx.core.content.FileProvider
 import coil.compose.rememberImagePainter
 import com.example.finalproject.ui.theme.FinalProjectTheme
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.database
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -72,12 +71,12 @@ class NewPostScreen : ComponentActivity() {
                     viewModel.dbState.db = db
 
                     database = Firebase.database.reference
-                    PostState.key = database.child("Post").push().key
-                    if(PostState.key  == null) {
-                        PostState.key = "1"
+                    PostStateCompanion.key = database.child("Post").push().key
+                    if(PostStateCompanion.key  == null) {
+                        PostStateCompanion.key = "1"
                         Log.d("Key empty", "Key is empty")
                     }
-                    Log.d("Key", "Key is: ${PostState.key}")
+                    Log.d("Key", "Key is: ${PostStateCompanion.key}")
 
                     Column {
 
@@ -145,8 +144,8 @@ fun PostImageCaptureFromCamera(viewModel: PostViewModel) {
     val home = Intent(context, MainActivity::class.java)
     var title by remember { mutableStateOf("") }
     val user = UserDataCompanion.userId
-    val postId = PostState.key
-    PostState.path = "Post/$user/$postId"
+    val postId = PostStateCompanion.key
+    PostStateCompanion.path = "Post/$user/$postId"
 
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
@@ -223,10 +222,10 @@ fun PostImageCaptureFromCamera(viewModel: PostViewModel) {
                 //TODO: Should save the image into storage as profile picture. Its probably in AccountViewModel
                 Button(onClick = {
                     //TODO: Post Image to storage and link it with the post.
-                    PostState.title = title
+                    PostStateCompanion.title = title
                     viewModel.onAction(PostAction.UploadPost)
                     Toast.makeText(context, "Post created", Toast.LENGTH_LONG).show()
-                    uploadPostImageToStorage(capturedImageUri, context, PostState.path)
+                    uploadPostImageToStorage(capturedImageUri, context, PostStateCompanion.path)
                     context.startActivity(home)
                 },modifier = Modifier
                     .fillMaxWidth()

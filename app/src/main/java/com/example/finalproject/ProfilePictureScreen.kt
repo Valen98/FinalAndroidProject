@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.finalproject.ui.theme.FinalProjectTheme
 import com.google.firebase.firestore.FirebaseFirestore
@@ -204,7 +205,7 @@ fun ImageCaptureFromCamera(viewModel: AccountViewModel) {
                                 permissionLauncher.launch(android.Manifest.permission.CAMERA)
                             }
                         },
-                    painter = rememberImagePainter(capturedImageUri),
+                    painter = rememberAsyncImagePainter(capturedImageUri),
                     contentDescription = null,
                 )
 
