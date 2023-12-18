@@ -132,8 +132,8 @@ fun CreatePassword() {
             UserDataCompanion.password = password
          }, enabled = isEnabled,
             modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
         ) {
             Text(text = "Next")
         }

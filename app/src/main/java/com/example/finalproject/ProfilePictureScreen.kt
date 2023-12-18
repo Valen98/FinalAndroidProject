@@ -136,7 +136,7 @@ fun AddPicture(viewModel: AccountViewModel) {
             .padding(top = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center) {
-            ImageCaptureFromCamera( viewModel)
+            ImageCaptureFromCamera(viewModel)
         }
     }
 }
