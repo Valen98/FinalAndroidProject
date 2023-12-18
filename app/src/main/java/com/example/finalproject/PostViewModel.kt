@@ -1,5 +1,6 @@
 package com.example.finalproject
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -128,13 +129,17 @@ class PostViewModel() : ViewModel() {
         return completableFuture.await()
     }
 
-    suspend fun fetchImage(storage: FirebaseStorage, reqUserId: String, reqImgId: String, postState: PostState) {
+    suspend fun fetchImage(storage: FirebaseStorage, postPath: String): MutableMap<String, Uri> {
+        val completableFuture = CompletableFuture<MutableMap<String, Uri>>()
+        Log.d("FetchImg", "FetchImg $postPath")
         val storageRef = storage.reference
-        val imgRef = storageRef.child("Post/$reqUserId/$reqImgId")
-        val localPostFile = File.createTempFile("post", "jpg")
-        imgRef.getFile(localPostFile).addOnSuccessListener {
-            postState.postImg = it
-        }
 
+        storageRef.child(postPath).downloadUrl.addOnSuccessListener {
+            val img = mutableMapOf<String, Uri>()
+            img[postPath] = it
+            //Log.d("postImgUri", "This is post Uri: $it")
+            completableFuture.complete(img)
+        }
+        return completableFuture.await()
     }
 }

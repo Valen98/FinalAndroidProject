@@ -8,5 +8,6 @@ class PostState(
     var userId: String = "",
     var userPostMap: Map<String, Map<String, Any>>? = null,
     var userDataMap: Map<String, Map<String, Any>>? = null,
-    var postImg: Uri
+    //var reqUserId: String,
+    var postImg: Map<String, Uri>? = null
 )

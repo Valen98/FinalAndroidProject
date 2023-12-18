@@ -96,7 +96,7 @@ class MainActivity : ComponentActivity() {
                                 ) {
                                     Text(text = "Logout")
                                 }
-                                MainFrame(postViewModel, db)
+                                MainFrame(postViewModel, db, )
                             }
 
                             //TODO: Fill this with more post, story and recommended follower and so on.
