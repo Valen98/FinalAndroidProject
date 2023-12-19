@@ -11,4 +11,5 @@
     <string name="title_activity_chat">ChatActivity</string>
     <string name="title_activity_new_post_screen">NewPostScreen</string>
     <string name="title_activity_new_story_screen">NewStoryScreen</string>
+    <string name="title_activity_profile_page_screen">ProfilePageScreen</string>
 </resources>

@@ -39,7 +39,7 @@ fun Footer(activity: String) {
     var addPostIcon: ImageVector = Icons.Outlined.AddAPhoto
     var profileIcon: ImageVector = Icons.Outlined.AccountCircle
     val context = LocalContext.current
-    val profile = Intent(context, ProfilePictureScreen::class.java)
+    val profile = Intent(context, ProfilePageScreen::class.java)
     val newPost = Intent(context, NewPostScreen::class.java)
     val home = Intent(context, MainActivity::class.java)
 
