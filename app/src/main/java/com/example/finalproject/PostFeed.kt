@@ -10,6 +10,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,8 +29,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -50,30 +53,33 @@ fun PostList(postViewModel: PostViewModel, db: FirebaseFirestore) {
     val fbs = FirebaseStorage.getInstance()
     val postState = postViewModel.postState
     var docSize by remember { mutableIntStateOf(0) }
+    var userDataSize by remember { mutableStateOf(0) }
     LaunchedEffect(Unit) {
-        val doc: Map<String, Map<String, Any>> = postViewModel.fetchAllPosts(db)
+        var doc: Map<String, Map<String, Any>> = postViewModel.fetchAllPosts(db)
+        doc = postViewModel.sortMapOnDate(doc).toSortedMap(reverseOrder())
         postState.userPostMap = doc
-        for (i in doc) {
+        //val loop = doc.size
+        val userList = mutableListOf<String>()
+        for(i in doc) {
             val userDoc: Map<String, Map<String, Any>> = postViewModel.fetchUsernameFromId(db, i.value["userId"].toString())
-            postState.userDataMap = userDoc
+            val userDocDocument: Map<String, Any>? = userDoc.values.firstOrNull()
+            postState.userDataMap = userDocDocument
+            userList.add(userDoc.keys.toString().replace("[", "").replace("]", ""))
+            userDataSize++
         }
+        postState.usernameList = userList
         docSize = doc.size
-        Log.d("docSize", "This is the Post size $docSize")
+        Log.d("docSize", "This is the Post size ${userList}")
 
     }
 
-    //LaunchedEffect(Unit) {
-      //  postViewModel.fetchImage(postState, )
-    //}
-
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
         items(docSize) { index ->
-            Log.d("LazyColumn", "Index: ${postState.userDataMap?.keys}")
+            Log.d("LazyColumn", "Index: ${postState.userDataMap}")
             val uniqueId = postState.userPostMap?.keys?.elementAt(index)
-            val uniqueUserId = postState.userDataMap?.keys?.elementAt(0)
             val post = postState.userPostMap?.get(uniqueId)
-            val user = postState.userDataMap?.get(uniqueUserId)
-            Log.d("postImg", "This is current postImg ${post?.get("postPath")}")
+            val user = postState.usernameList?.get(index)
+            Log.d("postImg", "This is current postImg ${postState.userDataMap}")
             Log.d("User ", "This is user: $user")
             if (post != null && user != null) {
                 PostItem(post, user, postState, postViewModel, fbs)
@@ -87,11 +93,10 @@ fun PostList(postViewModel: PostViewModel, db: FirebaseFirestore) {
 }
 
 @Composable
-fun PostItem(post: Map<String, Any>, user: Map<String, Any>, postState: PostState, postViewModel: PostViewModel, fbs : FirebaseStorage) {
+fun PostItem(post: Map<String, Any>, username: String, postState: PostState, postViewModel: PostViewModel, fbs : FirebaseStorage) {
     // Extract data from the message map
     var postImg by remember {  mutableStateOf("") }
-    val text = post["title"].toString()
-    val username = user["username"].toString()
+    val title = post["title"].toString()
     LaunchedEffect(Unit) {
         val imgDoc: Map<String, Uri> = postViewModel.fetchImage(
             fbs,
@@ -105,36 +110,44 @@ fun PostItem(post: Map<String, Any>, user: Map<String, Any>, postState: PostStat
             .fillMaxWidth()
             .padding(8.dp)
     ) {
+        Row(modifier = Modifier.padding(start = 16.dp)) {
+            Text(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .drawBehind {
+                        drawCircle(
+                            color = Color.Blue,
+                            radius = this.size.maxDimension,
+                        )
+                    },
+                text = username.first().toString(),
+                style = TextStyle(color = Color.White, fontSize = 20.sp)
+            )
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically){
+                Text(
+                    text = username,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
         Box(
             modifier = Modifier
-                .background(Color.Gray)
                 .padding(16.dp)
         ) {
-            Text(text)
 
-        }
-        Log.d("postImg", "${postState.postImg}")
-        Log.d("postPath", "${post["postPath"]}")
-        Log.d("ImgURI", "This is image URI: ${postState.postImg?.get("Post/R3CbVv0FjsXs4PFMej1BdYvPPzG2/-NlyrG0_1ImyqGwlWI4P")}")
-        AsyncImage(
-            model = postImg,
-            contentDescription = null
-        )
-        Text(username)
-        Text(text = post["postCreated"].toString(), fontSize = 12.sp)
-    }
-}
-
-/*
-Image(
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(200.dp)
-                    .clip(CircleShape)
-                    .border(8.dp, Color.LightGray, CircleShape),
-                painter = Painter(postState.postImg),
+            AsyncImage(
+                model = postImg,
                 contentDescription = null,
+                modifier = Modifier.size(450.dp)
             )
 
+        }
+        Column(modifier = Modifier.padding(start = 16.dp)) {
+            Text(title)
+            Text(text = post["postCreated"].toString(), fontSize = 12.sp)
+        }
 
- */
+    }
+}

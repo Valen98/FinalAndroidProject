@@ -12,8 +12,10 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.future.await
 import java.io.File
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.concurrent.CompletableFuture
 
 class PostViewModel() : ViewModel() {
@@ -141,5 +143,16 @@ class PostViewModel() : ViewModel() {
             completableFuture.complete(img)
         }
         return completableFuture.await()
+    }
+
+    fun sortMapOnDate(unsortedMap: Map<String, Map<String, Any>>): Map<String, Map<String, Any>> {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+        return unsortedMap.entries
+            .sortedBy { entry ->
+                dateFormat.parse(entry.value["postCreated"] as String)?.time
+            }
+            .associate { it.key to it.value }
+            .toMap(LinkedHashMap())
     }
 }
