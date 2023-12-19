@@ -3,22 +3,18 @@ package com.example.finalproject
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,8 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.finalproject.ui.theme.FinalProjectTheme
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 //Things to do in "MainScreen":
 // 1. USER ACTIONS:
@@ -62,11 +56,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    contactList = arrayListOf()
                     //Db connection
                     val viewModel: AccountViewModel by viewModels()
                     val postViewModel: PostViewModel by viewModels()
                     val db = viewModel.connectToDB()
+                    contactList = arrayListOf()
                     viewModel.dbState.db = db
 
                     auth = FirebaseAuth.getInstance()
@@ -76,14 +70,20 @@ class MainActivity : ComponentActivity() {
                     if(user == null) {
                         uContext.startActivity(login)
                     }else {
+
                         UserDataCompanion.username = user.displayName.toString()
                         UserDataCompanion.userId = user.uid
+
                         Column(
                             modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             //TODO: Should not be able to get into this activity when you are not signed in.
+
                             Header(uContext)
                             Column(modifier = Modifier.height(730.dp)) {
+                                AddToStory()
                                 SuggestFollowers(contentResolver)
 
                                 Button(
@@ -98,15 +98,14 @@ class MainActivity : ComponentActivity() {
                                 }
                                 MainFrame(postViewModel, db, )
                             }
+                            Footer("main")
 
                             //TODO: Fill this with more post, story and recommended follower and so on.
                             Text(text = "Welcome")
 
                             //TODO: Need to make a profile page with the correct data from the database.
-                            Footer("main")
                         }
                     }
-
                 }
             }
         }
@@ -118,12 +117,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen (){
-    Scaffold(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Column {
-
-        }
+    Column {
 
     }
 }
@@ -135,4 +129,3 @@ fun MainScreen (){
 fun PrevMainScreen (){
     MainScreen()
 }
-
