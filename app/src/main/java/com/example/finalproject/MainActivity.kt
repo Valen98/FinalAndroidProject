@@ -83,7 +83,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             //TODO: Should not be able to get into this activity when you are not signed in.
                             Header(uContext)
-                            Column(modifier = Modifier.height(730.dp)) {
+                            Column(modifier = Modifier.height(750.dp)) {
                                 SuggestFollowers(contentResolver)
 
                                 Button(
@@ -98,9 +98,6 @@ class MainActivity : ComponentActivity() {
                                 }
                                 MainFrame(postViewModel, db, )
                             }
-
-                            //TODO: Fill this with more post, story and recommended follower and so on.
-                            Text(text = "Welcome")
 
                             //TODO: Need to make a profile page with the correct data from the database.
                             Footer("main")
