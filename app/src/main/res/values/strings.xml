@@ -10,4 +10,5 @@
     <string name="title_activity_contact_screen">ContactScreen</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="title_activity_new_post_screen">NewPostScreen</string>
+    <string name="title_activity_new_story_screen">NewStoryScreen</string>
 </resources>

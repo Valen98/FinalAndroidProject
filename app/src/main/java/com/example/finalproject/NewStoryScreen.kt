@@ -1,5 +1,6 @@
 package com.example.finalproject
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,7 +14,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -31,7 +30,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,30 +40,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.finalproject.ui.theme.FinalProjectTheme
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Objects
 
-
-class ProfilePictureScreen : ComponentActivity() {
+class NewStoryScreen : ComponentActivity() {
+    private lateinit var database: DatabaseReference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -74,9 +66,18 @@ class ProfilePictureScreen : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val viewModel: AccountViewModel by viewModels()
+                    val viewModel: StoryViewModel by viewModels()
                     val db = viewModel.connectToDB()
                     viewModel.dbState.db = db
+
+                    database = Firebase.database.reference
+                    StoryState.key = database.child("Story").push().key
+                    if(StoryState.key  == null) {
+                        StoryState.key = "1"
+                        Log.d("Key empty", "Key is empty")
+                    }
+                    Log.d("Key", "Key is: ${StoryState.key}")
+
                     Column {
 
                         Row(
@@ -92,16 +93,10 @@ class ProfilePictureScreen : ComponentActivity() {
                                 )
                             }
                         }
-                        Row(modifier = Modifier.height(680.dp)) {
-                            AddPicture(viewModel)
+                        Row(modifier = Modifier.height(750.dp)) {
+                            AddStoryPicture(viewModel)
                         }
-                        OutlinedButton(
-                            onClick = { /* TODO */}, modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
-                        ) {
-                            Text(text = "Not now")
-                        }
+                        Footer("addPost")
                     }
                 }
             }
@@ -111,7 +106,8 @@ class ProfilePictureScreen : ComponentActivity() {
 
 
 @Composable
-fun AddPicture(viewModel: AccountViewModel) {
+fun AddStoryPicture(viewModel: StoryViewModel) {
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -120,7 +116,7 @@ fun AddPicture(viewModel: AccountViewModel) {
                 .fillMaxWidth()
                 .padding(start = 16.dp)
         ) {
-            Text(text = "Add a profile picture", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Text(text = "Post a picture to your Story", fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
         Row(
             modifier = Modifier
@@ -128,7 +124,7 @@ fun AddPicture(viewModel: AccountViewModel) {
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp)
         ) {
             Text(
-                text = "Add a profile picture so your friends know it's you. Everyone will be able to see your picture.",
+                text = "Add a Story so your friends can see it.",
                 fontSize = 16.sp
             )
         }
@@ -137,15 +133,19 @@ fun AddPicture(viewModel: AccountViewModel) {
             .padding(top = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center) {
-            ImageCaptureFromCamera(viewModel)
+            StoryImageCaptureFromCamera( viewModel)
         }
     }
 }
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ImageCaptureFromCamera(viewModel: AccountViewModel) {
+fun StoryImageCaptureFromCamera(viewModel: StoryViewModel) {
     val context = LocalContext.current
-    val accountCreated = Intent(context, MainActivity::class.java)
+    val home = Intent(context, MainActivity::class.java)
+    var title by remember { mutableStateOf("") }
+    val user = UserDataCompanion.userId
+    val storyId = StoryState.key
+    StoryState.path = "Story/$user/$storyId"
 
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
@@ -185,43 +185,52 @@ fun ImageCaptureFromCamera(viewModel: AccountViewModel) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            Row {
+            Row() {
                 Image(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(200.dp)
-                        .clip(CircleShape)
-                        .border(8.dp, Color.LightGray, CircleShape)
+                        .size(350.dp)
                         .clickable {
                             val permissionCheckResult =
                                 ContextCompat.checkSelfPermission(
                                     context,
-                                    android.Manifest.permission.CAMERA
+                                    Manifest.permission.CAMERA
                                 )
                             if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
                                 cameraLauncher.launch(uri)
                             } else {
                                 // Request a permission
-                                permissionLauncher.launch(android.Manifest.permission.CAMERA)
+                                permissionLauncher.launch(Manifest.permission.CAMERA)
                             }
                         },
-                    painter = rememberAsyncImagePainter(capturedImageUri),
+                    painter = rememberImagePainter(capturedImageUri),
                     contentDescription = null,
                 )
 
             }
+            Row {
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = {title = it},
+                    label = { Text("Title") },
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                        .fillMaxWidth()
+                )
+            }
             Row(modifier = Modifier.padding(top = 16.dp)) {
                 //TODO: Should save the image into storage as profile picture. Its probably in AccountViewModel
                 Button(onClick = {
-                    viewModel.onAction(UserAction.CreateAccount)
-                    Toast.makeText(context, "Account created", Toast.LENGTH_LONG).show()
-                    UserDataCompanion.image = file
-                    uploadImageToStorage(capturedImageUri, context)
-                    context.startActivity(accountCreated)
+                    //TODO: Post Image to storage and link it with the post.
+                    StoryState.title = title
+                    viewModel.onAction(StoryAction.UploadStory)
+                    Toast.makeText(context, "Story created", Toast.LENGTH_LONG).show()
+                    uploadStoryImageToStorage(capturedImageUri, context, StoryState.path)
+                    context.startActivity(home)
                 },modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = 16.dp)) {
-                    Text(text = "Continue")
+                    Text(text = "Post Story")
                 }
             }
         }
@@ -231,64 +240,38 @@ fun ImageCaptureFromCamera(viewModel: AccountViewModel) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            PlaceHolderImage()
 
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(end = 16.dp, top = 16.dp)) {
                 Button(onClick = {
                     val permissionCheckResult =
-                        ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA )
+                        ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA )
                     if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
                         cameraLauncher.launch(uri)
                     } else {
                         // Request a permission
-                        permissionLauncher.launch(android.Manifest.permission.CAMERA)
+                        permissionLauncher.launch(Manifest.permission.CAMERA)
                     }
                 }, modifier = Modifier
                     .fillMaxWidth()
                 ) {
-                    Text(text = "Add Picture")
+                    Text(text = "Add Picture to Story")
                 }
             }
         }
     }
-
 }
 
-fun Context.createImageFile(): File {
-    // Create an image file name
-    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-    val imageFileName = "JPEG_" + timeStamp + "_"
-    val image = File.createTempFile(
-        imageFileName, /* prefix */
-        ".jpg", /* suffix */
-        externalCacheDir      /* directory */
-    )
-    return image
-}
-
-@Composable
-fun PlaceHolderImage() {
-    Row {
-        Image(
-            painter = painterResource(id = R.drawable.profilepicture),
-            contentDescription = stringResource(id = R.string.profile_picture_desc),
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(200.dp)
-                .clip(CircleShape)
-                .border(8.dp, Color.LightGray, CircleShape)
-        )
-    }
-}
-
-//upload the image, just send in the Uri of the image and change
-// the 'path/name' for the purpose of the image
-fun uploadImageToStorage(img: Uri, context: Context) {
+/*
+    Path is the path to the post image in storage unit.
+    We are going to use the same path variable in UploadPost function
+    Then we will always have the same path for the file
+    */
+fun uploadStoryImageToStorage(img: Uri, context: Context, path: String) {
     img.let { uri ->
         val storageRef = FirebaseStorage.getInstance().reference
-        val imageRef = storageRef.child("ProfilePictures/${UserDataCompanion.username}.jpg")
+        val imageRef = storageRef.child(path)
         val uploadTask = imageRef.putFile(uri)
 
         uploadTask.addOnSuccessListener {
@@ -300,3 +283,4 @@ fun uploadImageToStorage(img: Uri, context: Context) {
         }
     }
 }
+
