@@ -100,21 +100,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun MainScreen (){
-    Column {
-
-    }
-}
-
-
-
-@Preview
-@Composable
-fun PrevMainScreen (){
-    MainScreen()
-}

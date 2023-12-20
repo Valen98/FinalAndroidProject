@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import coil.compose.rememberImagePainter
 import android.widget.ImageView
 import android.widget.Toast
@@ -14,11 +15,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -31,10 +36,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
@@ -80,18 +88,18 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
     val followingcount = UserDataCompanion.followingcount
     val followerscount = UserDataCompanion.followerscount
     val fbs = FirebaseStorage.getInstance()
-    val path = "ProfilePictures/${UserDataCompanion.username}.jpg"
-
     var profileImg by remember {  mutableStateOf("") }
 
+
+    Log.d("username", "${UserDataCompanion.username}")
     LaunchedEffect(Unit) {
-        val imgDoc: Map<String, Uri> = viewModel.fetchImage(
-            fbs, path
-        )
-        profileImg = imgDoc[path].toString()
+        // Assuming 'viewModel' has the 'fetchImage' function and 'fbs' is FirebaseStorage instance
+        viewModel.fetchImage(fbs).let { imgDoc ->
+            // Assuming 'post' is a Map and contains the key 'postPath'
+            val path = "ProfilePictures/${UserDataCompanion.username}.jpg"
+            profileImg = imgDoc[path]?.toString().toString()
+        }
     }
-
-
 
     val file = uContext.createImageFile()
     val uri = FileProvider.getUriForFile(
@@ -132,9 +140,14 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
               // load profile image here
-                AsyncImage(
-                    model = profileImg,
-                    contentDescription = null
+                Image(
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clip(CircleShape)
+                        .border(8.dp, Color.LightGray, CircleShape),
+                    painter = rememberAsyncImagePainter(profileImg),
+                    contentDescription = null,
                 )
             }
         }

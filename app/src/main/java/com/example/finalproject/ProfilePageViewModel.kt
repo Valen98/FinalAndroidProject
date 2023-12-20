@@ -17,14 +17,14 @@ import java.util.concurrent.CompletableFuture
 
 class ProfilePageViewModel : ViewModel() {
 
-    suspend fun fetchImage(storage: FirebaseStorage, postPath: String): MutableMap<String, Uri> {
+    suspend fun fetchImage(storage: FirebaseStorage): MutableMap<String, Uri> {
         val completableFuture = CompletableFuture<MutableMap<String, Uri>>()
-        Log.d("FetchImg", "FetchImg $postPath")
         val storageRef = storage.reference
+        val path = "ProfilePictures/${UserDataCompanion.username}.jpg"
 
-        storageRef.child(postPath).downloadUrl.addOnSuccessListener {
+        storageRef.child(path).downloadUrl.addOnSuccessListener {
             val img = mutableMapOf<String, Uri>()
-            img[postPath] = it
+            img[path] = it
             //Log.d("postImgUri", "This is post Uri: $it")
             completableFuture.complete(img)
         }
