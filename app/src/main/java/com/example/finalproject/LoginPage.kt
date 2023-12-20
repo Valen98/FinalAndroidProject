@@ -105,6 +105,18 @@ class LoginPage : ComponentActivity() {
                                     "Sign in Successful",
                                     Toast.LENGTH_LONG
                                 ).show()
+                                Log.d("Upload", "Uploaded the user to db")
+                                Log.d("SignInModel", "This is signInModel: ${signInModel.state.value.data}")
+
+                                UserDataCompanion.username = signInModel.state.value.data?.username!!
+                                UserDataCompanion.email = signInModel.state.value.data?.email!!
+
+                                accountVM.uploadNewUser(
+                                    db,
+                                    signInModel.state.value.data?.userId!!
+                                )
+
+
                                 startActivity(Intent(context, MainActivity::class.java))
                                 finish()
                             }
