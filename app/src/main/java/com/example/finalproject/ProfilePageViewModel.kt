@@ -19,11 +19,13 @@ class ProfilePageViewModel : ViewModel() {
 
     suspend fun fetchImage(storage: FirebaseStorage, postPath: String): MutableMap<String, Uri> {
         val completableFuture = CompletableFuture<MutableMap<String, Uri>>()
+        Log.d("FetchImg", "FetchImg $postPath")
         val storageRef = storage.reference
 
         storageRef.child(postPath).downloadUrl.addOnSuccessListener {
             val img = mutableMapOf<String, Uri>()
             img[postPath] = it
+            //Log.d("postImgUri", "This is post Uri: $it")
             completableFuture.complete(img)
         }
         return completableFuture.await()

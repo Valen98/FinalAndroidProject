@@ -43,6 +43,7 @@ class PostViewModel() : ViewModel() {
             "postKey" to PostStateCompanion.key,
             "postPath" to PostStateCompanion.path,
         )
+        UserDataCompanion.postcount += 1
 
         PostStateCompanion.key?.let {
             db.collection("UserPost").document(PostStateCompanion.key!!)

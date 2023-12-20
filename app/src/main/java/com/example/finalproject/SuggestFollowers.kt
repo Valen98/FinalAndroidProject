@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +38,8 @@ import com.google.accompanist.permissions.shouldShowRationale
 @Composable
 fun SuggestFollowers(contentResolver: ContentResolver) {
     Column (modifier = Modifier
-        .fillMaxWidth().height(130.dp)
+        .fillMaxWidth()
+        .height(130.dp)
     ){
         Text(text = "Suggested for you")
         ContactListRow(contentResolver)
@@ -88,12 +90,15 @@ fun ContactListRow(contentResolver: ContentResolver) {
 fun ContactItemColumn(contact: Contact) {
     val mContext = LocalContext.current
 
-    Column(modifier = Modifier.clickable {
-        val intent = Intent(mContext, ChatActivity::class.java)
-        intent.putExtra("contactId", contact.id)
-        mContext.startActivity(intent)
+    Column(modifier = Modifier
+        .clickable {
+            val intent = Intent(mContext, ChatActivity::class.java)
+            intent.putExtra("contactId", contact.id)
+            mContext.startActivity(intent)
 
-    }.height(100.dp).padding(start = 16.dp, end = 16.dp),
+        }
+        .height(100.dp)
+        .padding(start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,) {
         Column(modifier = Modifier.padding(start = 8.dp))  {

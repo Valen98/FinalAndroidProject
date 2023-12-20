@@ -12,8 +12,9 @@ class UserDataCompanion() {
         var image: File? = null
         var isSignedIn: Boolean = false
         var userNotExist: Boolean = false
-        var followers: Int = 0
-        var following: Int = 0
+        var followerscount: Int = 0
+        var followingcount: Int = 0
+        var postcount: Int = 0
     }
 }
 
