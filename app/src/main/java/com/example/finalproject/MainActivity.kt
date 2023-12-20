@@ -70,7 +70,6 @@ class MainActivity : ComponentActivity() {
                     if(user == null) {
                         uContext.startActivity(login)
                     }else {
-
                         UserDataCompanion.username = user.displayName.toString()
                         UserDataCompanion.userId = user.uid
 

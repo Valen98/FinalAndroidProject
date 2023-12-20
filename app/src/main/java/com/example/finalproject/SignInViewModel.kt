@@ -14,12 +14,10 @@ class   SignInViewModel(): ViewModel() {
     fun onSignInResult(result: SignInResult) {
         _state.update { it.copy(
             isSignedInSuccessful = result.data != null,
-            signInError = result.errorMessage
+            signInError = result.errorMessage,
+            data = result.data,
 
         ) }
     }
 
-    fun resetState() {
-        _state.update { SignInState() }
-    }
 }
