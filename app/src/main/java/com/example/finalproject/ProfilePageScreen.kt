@@ -48,6 +48,9 @@ import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.finalproject.ui.theme.FinalProjectTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
@@ -83,13 +86,24 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
     val accountViewModel = AccountViewModel()
     val uContext = LocalContext.current
     val login = Intent(uContext, LoginPage::class.java)
-    val username = UserDataCompanion.username
+    var username: String? = ""
     val postcount = UserDataCompanion.postcount
     val followingcount = UserDataCompanion.followingcount
     val followerscount = UserDataCompanion.followerscount
     val fbs = FirebaseStorage.getInstance()
+    val db = Firebase.firestore
     var profileImg by remember {  mutableStateOf("") }
 
+    /*val userId = FirebaseAuth.getInstance().currentUser!!.displayName
+    Log.d("userID", "= ${userId}")
+    val ref = userId?.let { db.collection("User").document(it) }
+    ref?.get()?.addOnSuccessListener {
+        if (it!=null){
+            username = it.data?.get("username")?.toString()
+        }
+    }?.addOnFailureListener{
+        Toast.makeText(uContext,"Failed", Toast.LENGTH_SHORT).show()
+    }*/ // not sure if this one will work...
 
     Log.d("username", "= ${UserDataCompanion.username}")
     LaunchedEffect(Unit) {
@@ -155,7 +169,7 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
         Row(
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = username)
+            username?.let { Text(text = it) }
             Text(text = "Placeholder for username")
         }
         Row (
