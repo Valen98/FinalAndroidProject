@@ -251,7 +251,7 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
             Button(
                 onClick = {
                     accountViewModel.onAction(UserAction.Logout)
-                    Thread.sleep(2000)
+                    Thread.sleep(1000)
                     uContext.startActivity(login)}
             ) {
                 Text( text = "Logout")

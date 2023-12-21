@@ -217,6 +217,7 @@ fun ImageCaptureFromCamera(viewModel: AccountViewModel) {
                     Toast.makeText(context, "Account created", Toast.LENGTH_LONG).show()
                     UserDataCompanion.image = file
                     uploadImageToStorage(capturedImageUri, context)
+                    Thread.sleep(1000)
                     context.startActivity(accountCreated)
                 },modifier = Modifier
                     .fillMaxWidth()

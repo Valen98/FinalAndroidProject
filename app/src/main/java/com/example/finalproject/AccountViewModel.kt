@@ -47,7 +47,7 @@ class AccountViewModel() : ViewModel() {
             "UserCreated" to userCreated
         )
 
-        db.collection("User1").document(UserDataCompanion.username)
+        db.collection("User").document(UserDataCompanion.username)
             .set(user)
             .addOnSuccessListener { documentReference ->
             Log.d("BIGTAG", "DocumentSnapshot added with ID: ${UserDataCompanion.username}")

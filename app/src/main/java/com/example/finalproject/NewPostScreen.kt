@@ -226,6 +226,7 @@ fun PostImageCaptureFromCamera(viewModel: PostViewModel) {
                     viewModel.onAction(PostAction.UploadPost)
                     Toast.makeText(context, "Post created", Toast.LENGTH_LONG).show()
                     uploadPostImageToStorage(capturedImageUri, context, PostStateCompanion.path)
+                    Thread.sleep(1000)
                     context.startActivity(home)
                 },modifier = Modifier
                     .fillMaxWidth()
