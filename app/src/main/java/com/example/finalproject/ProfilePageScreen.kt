@@ -91,7 +91,7 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
     var profileImg by remember {  mutableStateOf("") }
 
 
-    Log.d("username", "${UserDataCompanion.username}")
+    Log.d("username", "= ${UserDataCompanion.username}")
     LaunchedEffect(Unit) {
         // Assuming 'viewModel' has the 'fetchImage' function and 'fbs' is FirebaseStorage instance
         viewModel.fetchImage(fbs).let { imgDoc ->
@@ -99,8 +99,9 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
             val path = "ProfilePictures/${UserDataCompanion.username}.jpg"
             profileImg = imgDoc[path]?.toString().toString()
         }
-    }
 
+    }
+    Log.d("profil Img", "= ${profileImg}")
     val file = uContext.createImageFile()
     val uri = FileProvider.getUriForFile(
         Objects.requireNonNull(uContext),
