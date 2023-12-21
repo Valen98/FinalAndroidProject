@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     val uContext = LocalContext.current
                     val login = Intent(uContext, LoginPage::class.java)
                     val user = auth.currentUser
-                    if(user == null) {
+                    if(user == null ||  user.displayName.toString() == "") {
                         uContext.startActivity(login)
                     }else {
                         UserDataCompanion.username = user.displayName.toString()

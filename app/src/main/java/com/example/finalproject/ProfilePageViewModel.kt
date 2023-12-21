@@ -30,6 +30,7 @@ class ProfilePageViewModel : ViewModel() {
                 }
 
                 Log.d("fetchUser", "User data: $user ")
+                UserDataCompanion.username = user
                 completableFuture.complete(user)
             }
             .addOnFailureListener { exception ->

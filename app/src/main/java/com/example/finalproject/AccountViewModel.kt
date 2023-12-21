@@ -132,10 +132,11 @@ class AccountViewModel() : ViewModel() {
             }
     }
     private fun logoutUser() {
+        auth.signOut()
         UserDataCompanion.username = ""
         UserDataCompanion.email = ""
         UserDataCompanion.password = ""
-        auth.signOut()
+        UserDataCompanion.isSignedIn = false
     }
 
     fun checkUser(db: FirebaseFirestore) {

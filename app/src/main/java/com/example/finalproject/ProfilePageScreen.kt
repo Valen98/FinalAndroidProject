@@ -104,7 +104,7 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
     val accountViewModel = AccountViewModel()
     val uContext = LocalContext.current
     val login = Intent(uContext, LoginPage::class.java)
-    var username: String? = ""
+    var username  by remember { mutableStateOf("") }
     val postcount = UserDataCompanion.postcount
     val followingcount = UserDataCompanion.followingcount
     val followerscount = UserDataCompanion.followerscount
@@ -125,12 +125,12 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
 
     LaunchedEffect(Unit) {
 
-        val userName: String = viewModel.fetchUsernameFromId(db, UserDataCompanion.userId)
-        UserDataCompanion.username = userName
+        username = viewModel.fetchUsernameFromId(db, UserDataCompanion.userId)
+
         // Assuming 'viewModel' has the 'fetchImage' function and 'fbs' is FirebaseStorage instance
         viewModel.fetchImage(fbs).let { imgDoc ->
             // Assuming 'post' is a Map and contains the key 'postPath'
-            val path = "ProfilePictures/${userName}.jpg"
+            val path = "ProfilePictures/${username}.jpg"
             profileImg = imgDoc[path]?.toString().toString()
         }
 
@@ -174,14 +174,15 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
               // load profile image here
-                Image(
+
+                AsyncImage(
+                    model = profileImg,
                     contentScale = ContentScale.Crop,
+                    contentDescription = null,
                     modifier = Modifier
                         .size(200.dp)
                         .clip(CircleShape)
-                        .border(8.dp, Color.LightGray, CircleShape),
-                    painter = rememberAsyncImagePainter(capturedImageUri),
-                    contentDescription = null,
+                        .border(8.dp, Color.LightGray, CircleShape)
                 )
             }
         }
@@ -190,7 +191,6 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
             horizontalArrangement = Arrangement.Center
         ) {
             username?.let { Text(text = it) }
-            Text(text = UserDataCompanion.username)
         }
         Spacer(modifier = Modifier.height(30.dp))
         Row (
@@ -251,6 +251,7 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
             Button(
                 onClick = {
                     accountViewModel.onAction(UserAction.Logout)
+                    Thread.sleep(2000)
                     uContext.startActivity(login)}
             ) {
                 Text( text = "Logout")
