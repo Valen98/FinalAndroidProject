@@ -39,7 +39,7 @@ class StoryViewModel() : ViewModel() {
         )
 
         StoryState.key?.let {
-            db.collection("UserStory").document(StoryState.key!!)
+            db.collection("UserPost").document(StoryState.key!!)
                 .set(post)
                 .addOnSuccessListener { documentReference ->
                     Log.d("BIGTAG", "DocumentSnapshot added with ID: ${UserDataCompanion.username}")

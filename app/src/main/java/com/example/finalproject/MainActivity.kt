@@ -85,44 +85,15 @@ class MainActivity : ComponentActivity() {
                             Column(modifier = Modifier.height(730.dp)) {
                                 AddToStory()
                                 SuggestFollowers(contentResolver)
-
-                                Button(
-                                    onClick = {
-                                        viewModel.onAction(UserAction.Logout)
-                                        uContext.startActivity(login)
-                                    }, modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(end = 16.dp, top = 16.dp)
-                                ) {
-                                    Text(text = "Logout")
-                                }
                                 MainFrame(postViewModel, db, )
                             }
                             Footer("main")
 
-                            //TODO: Need to make a profile page with the correct data from the database.
+
                         }
                     }
                 }
             }
         }
     }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun MainScreen (){
-    Column {
-
-    }
-}
-
-
-
-@Preview
-@Composable
-fun PrevMainScreen (){
-    MainScreen()
 }

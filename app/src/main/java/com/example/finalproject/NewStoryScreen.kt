@@ -256,7 +256,7 @@ fun StoryImageCaptureFromCamera(viewModel: StoryViewModel) {
                 }, modifier = Modifier
                     .fillMaxWidth()
                 ) {
-                    Text(text = "Add Picture to Story")
+                    Text(text = "Add Picture to Story from Device Camera")
                 }
             }
         }
