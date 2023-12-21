@@ -16,19 +16,17 @@ import kotlinx.coroutines.future.await
 import java.util.concurrent.CompletableFuture
 
 class ProfilePageViewModel : ViewModel() {
-    suspend fun fetchUsernameFromId(db: FirebaseFirestore, reqUserId: String): Map<String, Map<String, Any>> {
-        val completableFuture = CompletableFuture<Map<String, Map<String, Any>>>()
+    suspend fun fetchUsernameFromId(db: FirebaseFirestore, reqUserId: String): String {
+        val completableFuture = CompletableFuture<String>()
         Log.d("UserID: ", "This is userId $reqUserId")
         val docRef = db.collection("User").whereEqualTo("userId", reqUserId)
         docRef.get()
             .addOnSuccessListener { querySnapshot ->
-                val user = mutableMapOf<String, Map<String, Any>>()
+                var user: String = ""
                 Log.d("UserDoc" , "This is querySnapshot: ${querySnapshot.documents}")
                 for (document in querySnapshot) {
-                    Log.d("UserDoc" , "This is document: $document")
-                    val userId = document.id
-                    val userIdData = document.data
-                    user[userId] = userIdData
+                    val username = document.data["username"]
+                    user = username.toString()
                 }
 
                 Log.d("fetchUser", "User data: $user ")

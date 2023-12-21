@@ -125,11 +125,12 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
 
     LaunchedEffect(Unit) {
 
-        val userDoc: Map<String, Map<String, Any>> = viewModel.fetchUsernameFromId(db, UserDataCompanion.userId)
+        val userName: String = viewModel.fetchUsernameFromId(db, UserDataCompanion.userId)
+        UserDataCompanion.username = userName
         // Assuming 'viewModel' has the 'fetchImage' function and 'fbs' is FirebaseStorage instance
         viewModel.fetchImage(fbs).let { imgDoc ->
             // Assuming 'post' is a Map and contains the key 'postPath'
-            val path = "ProfilePictures/1234.jpg"
+            val path = "ProfilePictures/${userName}.jpg"
             profileImg = imgDoc[path]?.toString().toString()
         }
 
@@ -189,7 +190,7 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
             horizontalArrangement = Arrangement.Center
         ) {
             username?.let { Text(text = it) }
-            Text(text = UserDataCompanion.userId)
+            Text(text = UserDataCompanion.username)
         }
         Spacer(modifier = Modifier.height(30.dp))
         Row (
