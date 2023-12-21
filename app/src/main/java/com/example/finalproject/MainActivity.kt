@@ -70,7 +70,6 @@ class MainActivity : ComponentActivity() {
                     if(user == null) {
                         uContext.startActivity(login)
                     }else {
-
                         UserDataCompanion.username = user.displayName.toString()
                         UserDataCompanion.userId = user.uid
 
@@ -82,6 +81,7 @@ class MainActivity : ComponentActivity() {
                             //TODO: Should not be able to get into this activity when you are not signed in.
 
                             Header(uContext)
+
                             Column(modifier = Modifier.height(730.dp)) {
                                 AddToStory()
                                 SuggestFollowers(contentResolver)
@@ -89,10 +89,7 @@ class MainActivity : ComponentActivity() {
                             }
                             Footer("main")
 
-                            //TODO: Fill this with more post, story and recommended follower and so on.
 
-
-                            //TODO: Need to make a profile page with the correct data from the database.
                         }
                     }
                 }
