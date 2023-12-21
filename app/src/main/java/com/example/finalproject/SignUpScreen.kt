@@ -94,8 +94,8 @@ class SignUpScreen : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
 @Composable
 fun Username(viewModel: AccountViewModel) {
-    var fullName by remember { mutableStateOf(UserDataCompanion.username) }
-    var email by remember { mutableStateOf(UserDataCompanion.email) }
+    var fullName by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     val uContext = LocalContext.current
 
     var isEnabled by remember { mutableStateOf(false) }

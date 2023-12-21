@@ -86,7 +86,6 @@ fun PostList(postViewModel: PostViewModel, db: FirebaseFirestore) {
                 //val uniqueUserId = postState.userDataMap?.keys?.elementAt(index)
                 //postState.userId = post["userId"].toString()
                 //val user = postState.userDataMap?.get(uniqueUserId)
-
             }
         }
     }
@@ -123,6 +122,7 @@ fun PostItem(post: Map<String, Any>, username: String, postState: PostState, pos
                 text = username.first().toString(),
                 style = TextStyle(color = Color.White, fontSize = 20.sp)
             )
+
             Row (
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically){

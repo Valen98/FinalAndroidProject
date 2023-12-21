@@ -20,8 +20,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
@@ -54,6 +56,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import java.io.File
 import java.util.Objects
 
 // profile page needs:
@@ -73,8 +76,23 @@ class ProfilePageScreen : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                   // ProfilePicutreImage(imagePath = "ProfilePictures/${UserDataCompanion.username}.jpg" )
-                    ProfilePage_UI(ProfilePageViewModel())
+
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        Header(context = LocalContext.current)
+                        Column(modifier = Modifier.height(730.dp)) {
+                            ProfilePage_UI(ProfilePageViewModel())
+                        }
+                        // ProfilePicutreImage(imagePath = "ProfilePictures/${UserDataCompanion.username}.jpg" )
+
+                        Footer(activity = "profile")
+
+                    }
+
                 }
             }
         }
@@ -105,17 +123,18 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
         Toast.makeText(uContext,"Failed", Toast.LENGTH_SHORT).show()
     }*/ // not sure if this one will work...
 
-    Log.d("username", "= ${UserDataCompanion.username}")
     LaunchedEffect(Unit) {
+
+        val userDoc: Map<String, Map<String, Any>> = viewModel.fetchUsernameFromId(db, UserDataCompanion.userId)
         // Assuming 'viewModel' has the 'fetchImage' function and 'fbs' is FirebaseStorage instance
         viewModel.fetchImage(fbs).let { imgDoc ->
             // Assuming 'post' is a Map and contains the key 'postPath'
-            val path = "ProfilePictures/${UserDataCompanion.username}.jpg"
+            val path = "ProfilePictures/1234.jpg"
             profileImg = imgDoc[path]?.toString().toString()
         }
 
     }
-    Log.d("profil Img", "= ${profileImg}")
+
     val file = uContext.createImageFile()
     val uri = FileProvider.getUriForFile(
         Objects.requireNonNull(uContext),
@@ -142,7 +161,6 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .background(color = Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -161,17 +179,19 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
                         .size(200.dp)
                         .clip(CircleShape)
                         .border(8.dp, Color.LightGray, CircleShape),
-                    painter = rememberAsyncImagePainter(profileImg),
+                    painter = rememberAsyncImagePainter(capturedImageUri),
                     contentDescription = null,
                 )
             }
         }
+        Spacer(modifier = Modifier.height(30.dp))
         Row(
             horizontalArrangement = Arrangement.Center
         ) {
             username?.let { Text(text = it) }
-            Text(text = "Placeholder for username")
+            Text(text = UserDataCompanion.userId)
         }
+        Spacer(modifier = Modifier.height(30.dp))
         Row (
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -210,6 +230,7 @@ fun ProfilePage_UI(viewModel: ProfilePageViewModel){
                 }
             }
         }
+        Spacer(modifier = Modifier.height(30.dp))
         Row{
             Button(
                 onClick = {
