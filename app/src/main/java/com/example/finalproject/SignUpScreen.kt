@@ -44,6 +44,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -97,7 +98,7 @@ fun Username(viewModel: AccountViewModel) {
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     val uContext = LocalContext.current
-
+    val createPassword = Intent(uContext, PasswordScreen::class.java)
     var isEnabled by remember { mutableStateOf(false) }
 
     Column() {
@@ -133,7 +134,11 @@ fun Username(viewModel: AccountViewModel) {
             UserDataCompanion.username = fullName
             UserDataCompanion.email = email
             GlobalScope.launch(Dispatchers.Main) {
-                checkUserExist(viewModel, uContext)
+                if(checkUserExist(viewModel)) {
+                    uContext.startActivity(createPassword)
+                }else {
+                    Toast.makeText(uContext, "Account with that name already exists", Toast.LENGTH_LONG).show()
+                }
                 Log.d("SignUp", "UserNotExist ${UserDataCompanion.userNotExist}")
 
             }
@@ -157,17 +162,13 @@ fun Username(viewModel: AccountViewModel) {
 }
 
 @OptIn(DelicateCoroutinesApi::class)
-suspend fun checkUserExist(viewModel: AccountViewModel, uContext: Context) {
-    val createPassword = Intent(uContext, PasswordScreen::class.java)
+suspend fun checkUserExist(viewModel: AccountViewModel): Boolean{
     val value = GlobalScope.async {
         withContext(Dispatchers.Default) {
             viewModel.checkUser(viewModel.connectToDB())
+            delay(500)
         }
     }
-    println(value.await())
-    if(UserDataCompanion.userNotExist) {
-        uContext.startActivity(createPassword)
-    }else {
-        //Toast.makeText(uContext, "Account with that name already exists", Toast.LENGTH_LONG).show()
-    }
+    value.await()
+    return UserDataCompanion.userNotExist
 }
